@@ -4,7 +4,7 @@ import { useWallet } from "./use-wallet";
 import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "~/providers/notification-provider";
 import { logger } from "~/lib/utils/logger";
-import { getMintPDA } from "~/lib/anchor/pda";
+import { getMembershipPDA, getMintPDA } from "~/lib/anchor/pda";
 import { PublicKey } from "@solana/web3.js";
 
 export interface NFTsState {
@@ -53,14 +53,7 @@ export function useNFTs() {
         const [mintPda] = getMintPDA(wallet.publicKey);
 
         // derive membership PDA
-        const [membershipPda] = PublicKey.findProgramAddressSync(
-          [
-            Buffer.from("membership"),
-            wallet.publicKey!.toBuffer(),
-            mintPda.toBuffer(),
-          ],
-          readOnlyProgram.programId
-        );
+        const membershipPda = getMembershipPDA(wallet.publicKey, mintPda);
 
         const membershipAccount =
           await readOnlyProgram.account.membership.fetchNullable(membershipPda);

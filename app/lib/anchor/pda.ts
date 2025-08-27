@@ -1,5 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { PROGRAM_ID, SEEDS } from "../utils/constants";
+import { Buffer } from "buffer";
 
 /**
  * Derive mint PDA
