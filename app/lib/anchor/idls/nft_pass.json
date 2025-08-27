@@ -1,0 +1,153 @@
+{
+  "address": "7Q3xJHpmQaxQfHZbDwCY4jRpPjjHNFjTyzX8i4K55Fbb",
+  "metadata": {
+    "name": "nft_pass",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "create_mint",
+      "discriminator": [
+        69,
+        44,
+        215,
+        132,
+        253,
+        214,
+        41,
+        45
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "PDA mint account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "user_ata",
+          "docs": [
+            "Temporary user's token account, not re-use"
+          ],
+          "writable": true
+        },
+        {
+          "name": "membership",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "docs": [
+            "Program & Sysvars accounts"
+          ]
+        },
+        {
+          "name": "associated_token_program"
+        },
+        {
+          "name": "system_program"
+        },
+        {
+          "name": "rent"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "tier",
+          "type": "u8"
+        },
+        {
+          "name": "expiry",
+          "type": "i64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Membership",
+      "discriminator": [
+        231,
+        141,
+        180,
+        98,
+        109,
+        168,
+        175,
+        166
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "CustomError",
+      "msg": "Custom error message"
+    }
+  ],
+  "types": [
+    {
+      "name": "Membership",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "tier",
+            "type": "u8"
+          },
+          {
+            "name": "expiry",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "uri",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "SEED",
+      "type": "string",
+      "value": "\"anchor\""
+    }
+  ]
+}
