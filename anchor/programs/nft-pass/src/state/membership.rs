@@ -7,10 +7,4 @@ pub struct Membership {
     pub tier: u8,
     pub expiry: i64,
     pub bump: u8,
-    #[max_len(32)]
-    pub name: String,
-    #[max_len(10)]
-    pub symbol: String,
-    #[max_len(200)]
-    pub uri: String,
 }

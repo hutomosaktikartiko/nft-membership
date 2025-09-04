@@ -6,7 +6,7 @@ resolution = false
 skip-lint = true
 
 [programs.devnet]
-nft_pass = "7Q3xJHpmQaxQfHZbDwCY4jRpPjjHNFjTyzX8i4K55Fbb"
+nft_membership = "9LXodSGJm8GhbbMyYWSh48YpkRDgFTQSoeezGPtLKJN2"
 
 [registry]
 url = "https://api.apr.dev"
@@ -17,3 +17,17 @@ wallet = "~/.config/solana/devnet/1.json"
 
 [scripts]
 test = "pnpm exec ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+[test]
+startup_wait = 5000
+shutdown_wait = 2000
+upgradeable = false
+
+[test.validator]
+bind_address = "0.0.0.0"
+url = "https://api.mainnet-beta.solana.com"
+ledger = ".anchor/test-ledger"
+rpc_port = 8899
+
+[[test.validator.clone]]
+address = "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"

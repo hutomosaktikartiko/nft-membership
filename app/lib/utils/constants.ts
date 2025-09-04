@@ -1,6 +1,6 @@
 import { clusterApiUrl } from "@solana/web3.js";
 
-export const PROGRAM_ID = "7Q3xJHpmQaxQfHZbDwCY4jRpPjjHNFjTyzX8i4K55Fbb";
+export const PROGRAM_ID = "9LXodSGJm8GhbbMyYWSh48YpkRDgFTQSoeezGPtLKJN2";
 
 /**
  * Network Configuration

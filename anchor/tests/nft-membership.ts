@@ -1,10 +1,11 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { NftPass } from "../target/types/nft_pass";
+import { NftMembership } from "../target/types/nft_membership";
 import {
   Keypair,
   PublicKey,
   SystemProgram,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
   SYSVAR_RENT_PUBKEY,
   Transaction,
 } from "@solana/web3.js";
@@ -17,21 +18,27 @@ import {
 } from "@solana/spl-token";
 import { expect } from "chai";
 
-describe("NFT Membership Pass Tests", () => {
+const METADATA_PROGRAM_ID = new PublicKey(
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+);
+
+describe("NFT Membership Tests", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
-  const program = anchor.workspace.NftPass as Program<NftPass>;
+  const program = anchor.workspace.NftMembership as Program<NftMembership>;
 
   let from: Keypair;
   let to: Keypair;
 
   let mintPda: PublicKey;
   let membershipPda: PublicKey;
+  let metadataPda: PublicKey;
+  let masterEditionPda: PublicKey;
 
   let fromAtaSync: PublicKey;
   let toAtaSync: PublicKey;
 
-  const name = "Anchor Membership Pass";
+  const name = "Anchor Membership";
   const symbol = "AMP";
   const uri = "https://example.com/nft-metadata.json";
   const tier = 1;
@@ -64,6 +71,23 @@ describe("NFT Membership Pass Tests", () => {
       ],
       program.programId
     );
+    [metadataPda] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        METADATA_PROGRAM_ID.toBuffer(),
+        mintPda.toBuffer(),
+      ],
+      METADATA_PROGRAM_ID
+    );
+    [masterEditionPda] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        METADATA_PROGRAM_ID.toBuffer(),
+        mintPda.toBuffer(),
+        Buffer.from("edition"),
+      ],
+      METADATA_PROGRAM_ID
+    );
 
     // users's ata
     fromAtaSync = getAssociatedTokenAddressSync(
@@ -88,10 +112,13 @@ describe("NFT Membership Pass Tests", () => {
           user: from.publicKey,
           mint: mintPda,
           userAta: fromAtaSync,
+          metadata: metadataPda,
           membership: membershipPda,
-
+          masterEdition: masterEditionPda,
+          sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
           tokenProgram: TOKEN_2022_PROGRAM_ID,
           associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          metadataProgram: METADATA_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
           rent: SYSVAR_RENT_PUBKEY,
         })
@@ -121,9 +148,13 @@ describe("NFT Membership Pass Tests", () => {
             user: from.publicKey,
             mint: mintPda,
             userAta: fromAtaSync,
+            metadata: metadataPda,
             membership: membershipPda,
+            masterEdition: masterEditionPda,
+            sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
             tokenProgram: TOKEN_2022_PROGRAM_ID,
             associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+            metadataProgram: METADATA_PROGRAM_ID,
             systemProgram: SystemProgram.programId,
             rent: SYSVAR_RENT_PUBKEY,
           })
@@ -178,7 +209,7 @@ describe("NFT Membership Pass Tests", () => {
         expect.fail("Transfer should have failed but succeeded");
       } catch (error) {
         console.log("Transfer failed as expected:", error.message);
-        expect(error.message).to.include("account is frozen");
+        expect(error.message.toLowerCase()).to.include("account is frozen");
       }
     });
   });
